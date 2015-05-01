@@ -2,6 +2,7 @@ require "json"
 require "openssl"
 require "rack"
 require "sinatra"
+require "twitter"
 require "unirest"
 
 def verify_signature(payload_body, request_signature)
@@ -22,6 +23,20 @@ def formula_info(formula, tap)
   }
 end
 
+def send_twitter(tap, tweet)
+  account = case tap
+            when "homebrew-science" then "brew_sci"
+            else "MacHomebrew"
+            end
+  client = Twitter::REST::Client.new do |config|
+    config.consumer_key        = ENV["TWITTER_CONSUMER_KEY_#{account.upcase}"]
+    config.consumer_secret     = ENV["TWITTER_CONSUMER_SEC_#{account.upcase}"]
+    config.access_token        = ENV["TWITTER_ACCESS_TOKEN_#{account.upcase}"]
+    config.access_token_secret = ENV["TWITTER_ACCESS_TOKEN_SEC_#{account.upcase}"]
+  end
+  client.update(tweet)
+end
+
 def process(payload, event)
   halt "Ping event from #{payload["repository"]["full_name"]}." if event == "ping"
   halt 500, "Only push event is allowed!" unless event == "push"
@@ -36,7 +51,7 @@ def process(payload, event)
                  else
                    halt 500, "Bot isn't enabled yet in #{tap}."
                  end
-  new_formulae.each do |formula|
+  new_formulae.map do |formula|
     name = File.basename(formula, ".rb")
     info = formula_info(formula, tap)
     tweet = "New formula #{name}"
@@ -44,7 +59,8 @@ def process(payload, event)
     tweet += " #{info[:home]}"
     tweet += " http://doi.org/#{info[:doi]}" if info[:doi]
     tweet += " ##{info[:tag]}" if info[:tag]
-    puts tweet
+    puts "==> Send tweet: #{tweet}"
+    send_twitter(tap, tweet)
   end
 end
 

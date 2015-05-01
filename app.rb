@@ -23,6 +23,7 @@ def formula_info(formula, tap)
 end
 
 def process(payload, event)
+  halt "Ping event from #{payload["repository"]["full_name"]}." if event == "ping"
   halt 500, "Only push event is allowed!" unless event == "push"
   tap = payload["repository"]["name"]
   new_files = payload["commits"].reduce([]) { |files, commit| files += commit["added"] }

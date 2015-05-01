@@ -61,7 +61,7 @@ def process(payload, event)
     tweet += " ##{info[:tag]}" if info[:tag]
     puts "==> Send tweet: #{tweet}"
     send_twitter(tap, tweet)
-  end
+  end.map(&:full_text).join("\n\n")
 end
 
 post "/payload" do

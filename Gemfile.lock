@@ -3,6 +3,7 @@ GEM
   specs:
     addressable (2.3.8)
     buftok (0.2.0)
+    diff-lcs (1.2.5)
     equalizer (0.0.11)
     faraday (0.9.1)
       multipart-post (>= 1.2, < 3)
@@ -18,10 +19,24 @@ GEM
     rack (1.6.0)
     rack-protection (1.5.3)
       rack
+    rake (10.4.2)
     rdoc (4.2.0)
     rest-client (1.6.8)
       mime-types (~> 1.16)
       rdoc (>= 2.4.2)
+    rspec (3.2.0)
+      rspec-core (~> 3.2.0)
+      rspec-expectations (~> 3.2.0)
+      rspec-mocks (~> 3.2.0)
+    rspec-core (3.2.2)
+      rspec-support (~> 3.2.0)
+    rspec-expectations (3.2.0)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.2.0)
+    rspec-mocks (3.2.1)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.2.0)
+    rspec-support (3.2.2)
     simple_oauth (0.3.1)
     sinatra (1.4.6)
       rack (~> 1.4)
@@ -50,6 +65,8 @@ PLATFORMS
 
 DEPENDENCIES
   rack
+  rake
+  rspec
   sinatra
   twitter
   unirest

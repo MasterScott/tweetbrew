@@ -1,7 +1,11 @@
 source "https://rubygems.org"
-ruby "2.0.0"
 
 gem "rack"
 gem "sinatra"
 gem "twitter"
 gem "unirest"
+
+group :test do
+  gem "rspec"
+  gem "rake"
+end

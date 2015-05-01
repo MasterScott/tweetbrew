@@ -25,6 +25,7 @@ end
 def process(payload, event)
   halt "Ping event from #{payload["repository"]["full_name"]}." if event == "ping"
   halt 500, "Only push event is allowed!" unless event == "push"
+  halt "Skip non-master push event." unless payload["ref"] == "refs/heads/master"
   tap = payload["repository"]["name"]
   new_files = payload["commits"].reduce([]) { |files, commit| files += commit["added"] }
   new_formulae = case tap

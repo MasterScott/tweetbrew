@@ -23,7 +23,7 @@ def formula_info(formula, tap)
   }
 end
 
-def send_twitter(tap, tweet)
+def send_tweet(tap, tweet)
   account = case tap
             when "homebrew-science" then "brew_sci"
             else "MacHomebrew"
@@ -60,7 +60,7 @@ def process(payload, event)
     tweet += " http://doi.org/#{info[:doi]}" if info[:doi]
     tweet += " ##{info[:tag]}" if info[:tag]
     puts "==> Send tweet: #{tweet}"
-    send_twitter(tap, tweet)
+    send_tweet(tap, tweet)
   end.map(&:full_text).join("\n\n")
 end
 

@@ -34,7 +34,7 @@ def send_tweet(tap, tweet)
     config.access_token        = ENV["TWITTER_ACCESS_TOKEN_#{account.upcase}"]
     config.access_token_secret = ENV["TWITTER_ACCESS_TOKEN_SEC_#{account.upcase}"]
   end
-  client.update(tweet)
+  client.update(tweet).uri.to_s
 end
 
 def process(payload, event)
@@ -61,7 +61,7 @@ def process(payload, event)
     tweet += " ##{info[:tag]}" if info[:tag]
     puts "==> Send tweet: #{tweet}"
     send_tweet(tap, tweet)
-  end.map(&:full_text).join("\n\n")
+  end.join("\n")
 end
 
 post "/payload" do

@@ -23,6 +23,13 @@ def formula_info(formula, tap)
   }
 end
 
+def doi2url(doi)
+  case doi
+  when /^arXiv:/ then "http://arxiv.org/abs/#{doi.sub(/^arXiv:/, "")}"
+  else "http://doi.org/#{doi}"
+  end
+end
+
 def send_tweet(tap, tweet)
   account = case tap
             when "homebrew-science" then "brew_sci"
@@ -57,7 +64,7 @@ def process(payload, event)
     tweet = "New formula #{name}"
     tweet += " in Homebrew/#{tap.gsub "homebrew-", "" }" unless tap == "homebrew"
     tweet += " #{info[:home]}"
-    tweet += " http://doi.org/#{info[:doi]}" if info[:doi]
+    tweet += " #{doi2url(info[:doi])}" if info[:doi]
     tweet += " ##{info[:tag]}" if info[:tag]
     puts "==> Send tweet: #{tweet}"
     send_tweet(tap, tweet)

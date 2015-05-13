@@ -29,4 +29,4 @@ TWITTER_ACCESS_TOKEN_SEC_{ACCOUNT_NAME}`. Where the `{ACCOUNT_NAME}` should be t
 
 ### For unofficial Taps
 
-[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy)
+[![Deploy to Heroku](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)

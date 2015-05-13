@@ -1,0 +1,29 @@
+{
+  "name": "tweetbrew",
+  "description": "Twitter bot for Homebrew",
+  "website": "https://github.com/xu-cheng/tweetbrew",
+  "repository": "https://github.com/xu-cheng/tweetbrew",
+  "success_url": "/",
+  "env": {
+    "GITHUB_WEBHOOK_TOKEN": {
+      "description": "Secret token for your Github Webhook. https://developer.github.com/webhooks/securing/",
+      "required": true
+    },
+    "TWITTER_CONSUMER_KEY": {
+      "description": "Twitter account consumer key",
+      "required": true
+    },
+    "TWITTER_CONSUMER_SEC": {
+      "description": "Twitter account consumer secret",
+      "required": true
+    },
+    "TWITTER_ACCESS_TOKEN": {
+      "description": "Twitter account access token",
+      "required": true
+    },
+    "TWITTER_ACCESS_TOKEN_SEC": {
+      "description": "Twitter account access token secret",
+      "required": true
+    }
+  }
+}

@@ -12,7 +12,7 @@ def process(payload, event)
   new_formulae.map do |formula|
     tweet = "New formula #{formula.name}"
     tweet += " in #{tap.name}"
-    tweet += " #{formula.home}"
+    tweet += " #{formula.homepage}"
     tweet += " #{doi2url(formula.doi)}" if formula.doi
     tweet += " ##{formula.tag}" if formula.tag
     puts "==> Send tweet: #{tweet}"

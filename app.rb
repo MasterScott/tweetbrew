@@ -1,73 +1,22 @@
+$:.unshift(File.expand_path("#{File.dirname(__FILE__)}/app"))
+require "tweetbrew"
 require "json"
-require "openssl"
-require "rack"
-require "sinatra"
-require "twitter"
-require "unirest"
-
-def verify_signature(payload_body, request_signature)
-  signature = "sha1=" + OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new("sha1"),
-                                                ENV["GITHUB_WEBHOOK_TOKEN"],
-                                                payload_body)
-  unless Rack::Utils.secure_compare(signature, request_signature)
-    halt 500, "Signatures didn't match!"
-  end
-end
-
-def formula_info(formula, tap)
-  code = Unirest.get("https://raw.githubusercontent.com/Homebrew/#{tap}/master/#{formula}").raw_body
-  {
-    :home => code.match(/homepage ['"]([^'"]+)['"]/) ? $1 : nil,
-    :doi => code.match(/doi ['"]([^'"]+)['"]/) ? $1 : nil,
-    :tag => code.match(/tag ['"]([^'"]+)['"]/) ? $1 : nil,
-  }
-end
-
-def doi2url(doi)
-  case doi
-  when /^arXiv:/ then "http://arxiv.org/abs/#{doi.sub(/^arXiv:/, "")}"
-  else "http://doi.org/#{doi}"
-  end
-end
-
-def send_tweet(tap, tweet)
-  account = case tap
-            when "homebrew-science" then "brew_sci"
-            else "MacHomebrew"
-            end
-  client = Twitter::REST::Client.new do |config|
-    config.consumer_key        = ENV["TWITTER_CONSUMER_KEY_#{account.upcase}"]
-    config.consumer_secret     = ENV["TWITTER_CONSUMER_SEC_#{account.upcase}"]
-    config.access_token        = ENV["TWITTER_ACCESS_TOKEN_#{account.upcase}"]
-    config.access_token_secret = ENV["TWITTER_ACCESS_TOKEN_SEC_#{account.upcase}"]
-  end
-  client.update(tweet).uri.to_s
-end
 
 def process(payload, event)
   halt "Ping event from #{payload["repository"]["full_name"]}." if event == "ping"
   halt 500, "Only push event is allowed!" unless event == "push"
   halt "Skip non-master push event." unless payload["ref"] == "refs/heads/master"
-  tap = payload["repository"]["name"]
+  tap = Tap.new payload["repository"]["full_name"]
   new_files = payload["commits"].reduce([]) { |files, commit| files += commit["added"] }
-  new_formulae = case tap
-                 when "homebrew"
-                   new_files.select { |file| file.match %r{^Library/Formula/[^/]+\.rb$} }
-                 when "homebrew-science"
-                   new_files.select { |file| file.match %r{^((Homebrew)?Formula/)?[^/]+\.rb$} }
-                 else
-                   halt 500, "Bot isn't enabled yet in #{tap}."
-                 end
+  new_formulae = new_files.select { |f| tap.formula? f }.map { |f| Formula.new tap, f }
   new_formulae.map do |formula|
-    name = File.basename(formula, ".rb")
-    info = formula_info(formula, tap)
-    tweet = "New formula #{name}"
-    tweet += " in Homebrew/#{tap.gsub "homebrew-", "" }" unless tap == "homebrew"
-    tweet += " #{info[:home]}"
-    tweet += " #{doi2url(info[:doi])}" if info[:doi]
-    tweet += " ##{info[:tag]}" if info[:tag]
+    tweet = "New formula #{formula.name}"
+    tweet += " in #{tap.name}"
+    tweet += " #{formula.home}"
+    tweet += " #{doi2url(formula.doi)}" if formula.doi
+    tweet += " ##{formula.tag}" if formula.tag
     puts "==> Send tweet: #{tweet}"
-    send_tweet(tap, tweet)
+    twitter_client(tap).update(tweet).uri.to_s
   end.join("\n")
 end
 

@@ -1,6 +1,6 @@
 # tweetbrew
 
-[![Build Status](https://travis-ci.org/xu-cheng/tweetbrew.svg?branch=master)](https://travis-ci.org/xu-cheng/tweetbrew)
+[![Build Status](https://travis-ci.org/Homebrew/tweetbrew.svg?branch=master)](https://travis-ci.org/Homebrew/tweetbrew)
 
 A twitter bot generates tweet about new formulae in [Homebrew](http://brew.sh).
 

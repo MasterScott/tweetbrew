@@ -1,5 +1,6 @@
 source "https://rubygems.org"
 
+gem "omniauth-twitter"
 gem "rack"
 gem "sinatra"
 gem "twitter"

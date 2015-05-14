@@ -1,6 +1,15 @@
 $:.unshift(File.expand_path("#{File.dirname(__FILE__)}/app"))
 require "tweetbrew"
 require "json"
+require "omniauth-twitter"
+
+configure do
+  enable :sessions
+
+  use OmniAuth::Builder do
+    provider :twitter, ENV["TWITTER_CONSUMER_KEY"], ENV["TWITTER_CONSUMER_SEC"]
+  end
+end
 
 post "/payload" do
   request.body.rewind
@@ -24,3 +33,19 @@ post "/payload" do
     twitter_client(tap).update(tweet).uri.to_s
   end.join("\n")
 end
+
+get "/" do
+  if session[:uid]
+    "<ul><li>Token: #{session[:twitter_token]}</li><li>Token Secret: #{session[:twitter_token_sec]}</li></ul>"
+  else
+    '<a href="/auth/twitter"><button>Generate Twitter Token</button></a>'
+  end
+end
+
+get "/auth/twitter/callback" do
+  session[:uid] = env["omniauth.auth"]["uid"]
+  session[:twitter_token] = env["omniauth.auth"].credentials.token
+  session[:twitter_token_sec] = env["omniauth.auth"].credentials.secret
+  redirect to("/")
+end
+

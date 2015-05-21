@@ -6,7 +6,7 @@ A twitter bot generates tweet about new formulae in [Homebrew](http://brew.sh).
 
 ## Example
 
-See the live action in [@brew_sci](https://twitter.com/brew_sci). A tweet would be like:
+See the live action in [@HomebrewFormula](https://twitter.com/HomebrewFormula) and [@brew_sci](https://twitter.com/brew_sci). A tweet would be like:
 
 > New formula fermikit in Homebrew/science https://github.com/lh3/fermikit  http://arxiv.org/abs/1504.06574  #bioinformatics
 

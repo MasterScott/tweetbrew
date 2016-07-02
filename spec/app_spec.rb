@@ -28,14 +28,14 @@ describe :app do
 
     it "returns OK for ping event" do
       header "X-Github-Event", "ping"
-      post "/payload", { "repository" => { "full_name" => "Homebrew/homebrew" } }.to_json
+      post "/payload", { "repository" => { "full_name" => "Homebrew/homebrew-core" } }.to_json
       expect(last_response).to be_ok
-      expect(last_response.body).to eq("Ping event from Homebrew.")
+      expect(last_response.body).to eq("Ping event from Homebrew/core.")
     end
 
     it "skips for non-master push event" do
       header "X-Github-Event", "push"
-      post "/payload", { "repository" => { "full_name" => "Homebrew/homebrew"},
+      post "/payload", { "repository" => { "full_name" => "Homebrew/homebrew-core" },
                          "ref" => "refs/heads/gh-pages" }.to_json
       expect(last_response).to be_ok
       expect(last_response.body).to eq("Skip non-master push event.")
@@ -43,7 +43,7 @@ describe :app do
 
     it "halts for non-push event" do
       header "X-Github-Event", "not-push"
-      post "/payload", { "repository" => { "full_name" => "Homebrew/homebrew"} }.to_json
+      post "/payload", { "repository" => { "full_name" => "Homebrew/homebrew-core"} }.to_json
       expect(last_response).not_to be_ok
       expect(last_response.body).to eq("Only push event is allowed!")
     end

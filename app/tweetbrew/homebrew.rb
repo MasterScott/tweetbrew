@@ -11,24 +11,12 @@ class Tap
     user == "Homebrew"
   end
 
-  def core?
-    official? && (repo == "homebrew" || repo == "linuxbrew")
-  end
-
   def name
-    if core?
-      repo[0].upcase + repo[1..-1]
-    else
-      "#{user}/#{repo.sub "homebrew-", ""}"
-    end
+    "#{user}/#{repo.sub "homebrew-", ""}"
   end
 
   def formula?(file)
-    if core?
-      %r{^Library/Formula/[^/]+\.rb$} === file
-    else
-      %r{^((Homebrew)?Formula/)?[^/]+\.rb$} === file
-    end
+    %r{^((Homebrew)?Formula/)?[^/]+\.rb$} === file
   end
 
   def get_file(file)

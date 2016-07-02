@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe Tap do
-  let(:core) { Tap.new "Homebrew/homebrew" }
+  let(:core) { Tap.new "Homebrew/homebrew-core" }
   let(:science) { Tap.new "Homebrew/homebrew-science" }
   let(:unofficial) { Tap.new "Test/homebrew-test" }
 
@@ -11,15 +11,9 @@ describe Tap do
     expect(unofficial.official?).to eq(false)
   end
 
-  it "check whether it is core or tap" do
-    expect(core.core?).to eq(true)
-    expect(science.core?).to eq(false)
-    expect(unofficial.core?).to eq(false)
-  end
-
   it "check whether a file is formula" do
-    expect(core.formula? "Library/Homebrew/global.rb").to eq(false)
-    expect(core.formula? "Library/Formula/global.rb").to eq(true)
+    expect(core.formula? "Homebrew/global.rb").to eq(false)
+    expect(core.formula? "Formula/global.rb").to eq(true)
     expect(science.formula? "a5.rb").to eq(true)
     expect(science.formula? "Formula/a5.rb").to eq(true)
     expect(science.formula? "HomebrewFormula/a5.rb").to eq(true)

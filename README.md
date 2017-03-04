@@ -2,13 +2,13 @@
 
 [![Build Status](https://travis-ci.org/Homebrew/tweetbrew.svg?branch=master)](https://travis-ci.org/Homebrew/tweetbrew)
 
-A twitter bot generates tweet about new formulae in [Homebrew](http://brew.sh).
+A twitter bot generates tweet about new formulae in [Homebrew](https://brew.sh).
 
 ## Example
 
 See the live action in [@HomebrewFormula](https://twitter.com/HomebrewFormula) and [@brew_sci](https://twitter.com/brew_sci). A tweet would be like:
 
-> New formula fermikit in Homebrew/science https://github.com/lh3/fermikit  http://arxiv.org/abs/1504.06574  #bioinformatics
+> New formula fermikit in Homebrew/science https://github.com/lh3/fermikit  https://arxiv.org/abs/1504.06574  #bioinformatics
 
 For new formulae in [Homebrew/science](https://github.com/Homebrew/homebrew-science), the tweet will contains tags and DOI references if they are available.
 
